@@ -1,106 +1,196 @@
 # TaskFlow AI — Unified Work Platform
 
-A full-stack team task management system built for AI/LLM annotation, evaluation, and collaboration workflows.
+> **Live Demo:** https://taskflow-ai-b1ql.onrender.com
 
-## Features
+A full-stack, production-grade team task management platform built specifically for **AI/LLM post-training workflows** — covering annotation, evaluation, validation, and labeling pipelines with role-based access control and quality scoring.
 
-- **Authentication** — Signup/Login with JWT, role-based access (Admin / Reviewer / Member)
-- **Projects** — Create & manage projects, Kanban board + list views, progress tracking
-- **Tasks** — Full CRUD with status, priority, assignee, due dates, AI workflow types
-- **AI Workflows** — Dedicated pipeline for annotation, evaluation, validation, labeling tasks with quality scoring (accuracy, relevance, coherence)
+---
+
+## 🚀 Live Demo
+
+**URL:** https://taskflow-ai-b1ql.onrender.com
+
+---
+
+## ✨ Features
+
+### Core
+- **Authentication** — Signup/Login with JWT, persistent sessions
+- **Role-Based Access Control** — Admin, Reviewer, Member with different permissions
+- **Projects** — Kanban board + list views, color coding, progress tracking
+- **Tasks** — Full CRUD with status, priority, assignee, due dates
+- **Dashboard** — Real-time charts, 7-day completion trends, overdue tracking
 - **Team Management** — View all members, assign roles (Admin only)
-- **Notifications** — Real-time in-app notifications
-- **Dashboard** — Charts, completion trends, overdue tracking
+- **Notifications** — In-app notifications for assignments and status changes
+- **Comments** — Per-task threaded comments
 
-## Tech Stack
-
-- **Frontend**: React 18 + Vite, TailwindCSS, React Query, Zustand, Recharts
-- **Backend**: Node.js + Express
-- **Database**: PostgreSQL (auto-initializes schema on first run)
-
----
-
-## 🚀 Deploy on Railway (3 steps)
-
-### 1. Push to GitHub
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/taskflow-ai.git
-git push -u origin main
-```
-
-### 2. Create Railway project
-1. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Select your repo
-
-### 3. Add PostgreSQL database
-1. In Railway dashboard → New → Database → Add PostgreSQL
-2. Railway will automatically inject `DATABASE_URL` into your service
-
-### 4. Set environment variables
-In Railway → your service → Variables, add:
-```
-JWT_SECRET=<generate a random 64-char string>
-NODE_ENV=production
-```
-
-That's it. Railway will auto-build and deploy. The app auto-creates all database tables on first boot.
+### AI Workflow Pipeline (Built for LLM Post-Training)
+- **Annotation Tasks** — Label and categorize training data with structured schemas
+- **Evaluation Tasks** — Score LLM prompt-response pairs on accuracy, relevance, coherence (0–10)
+- **Validation Tasks** — Quality checks for guideline adherence and SLA compliance
+- **Labeling Tasks** — Structured/unstructured data labeling with reviewer feedback loops
+- **Quality Evaluation Panel** — Submit detailed scoring with written feedback on any AI task
+- **Workflow Dashboard** — Pipeline overview with radar chart for team quality metrics
 
 ---
 
-## Local Development
+## 🛠 Tech Stack
 
-### Prerequisites
-- Node.js 18+
-- PostgreSQL running locally
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, TailwindCSS |
+| State Management | Zustand + React Query |
+| Charts | Recharts |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL |
+| Auth | JWT (JSON Web Tokens) |
+| Deployment | Render.com |
+| Version Control | Git + GitHub |
 
-### Setup
+---
+
+## 📁 Project Structure
+
+```
+taskflow-ai/
+├── frontend/                  # React + Vite frontend
+│   ├── src/
+│   │   ├── pages/             # Route pages
+│   │   │   ├── DashboardPage.jsx
+│   │   │   ├── ProjectsPage.jsx
+│   │   │   ├── ProjectDetailPage.jsx
+│   │   │   ├── TasksPage.jsx
+│   │   │   ├── TaskDetailPage.jsx
+│   │   │   ├── WorkflowPage.jsx
+│   │   │   ├── TeamPage.jsx
+│   │   │   └── ProfilePage.jsx
+│   │   ├── components/        # Shared components
+│   │   │   ├── Layout.jsx
+│   │   │   └── Modal.jsx
+│   │   ├── store/             # Zustand global state
+│   │   └── api/               # Axios API client
+│   ├── index.html
+│   └── vite.config.js
+├── backend/                   # Express REST API
+│   ├── routes/
+│   │   ├── auth.js            # Signup, Login, Profile
+│   │   ├── projects.js        # Project CRUD + members
+│   │   ├── tasks.js           # Task CRUD + comments + evaluation
+│   │   └── misc.js            # Dashboard, Team, Notifications
+│   ├── middleware/
+│   │   └── auth.js            # JWT + role guards
+│   ├── db/
+│   │   └── index.js           # PostgreSQL + auto schema init
+│   └── server.js
+├── package.json               # Root build scripts
+└── README.md
+```
+
+---
+
+## 🗄 Database Schema
+
+Auto-initialized on first boot — no manual setup needed.
+
+- `users` — Auth, roles, avatar color
+- `projects` — Project metadata, owner, status
+- `project_members` — Many-to-many membership
+- `tasks` — Tasks with type, priority, status, assignee
+- `task_comments` — Threaded comments
+- `workflow_evaluations` — Quality scores (accuracy, relevance, coherence, overall)
+- `notifications` — In-app notification feed
+
+---
+
+## 🔐 Role Permissions
+
+| Feature | Admin | Reviewer | Member |
+|---|---|---|---|
+| Create/delete projects | ✅ | ❌ | ❌ |
+| Manage team roles | ✅ | ❌ | ❌ |
+| Submit quality evaluations | ✅ | ✅ | ❌ |
+| Create/manage tasks | ✅ | ✅ | ✅ |
+| Comment on tasks | ✅ | ✅ | ✅ |
+
+---
+
+## 🌐 API Endpoints
+
+```
+POST   /api/auth/signup
+POST   /api/auth/login
+GET    /api/auth/me
+PUT    /api/auth/me
+
+GET    /api/projects
+POST   /api/projects
+GET    /api/projects/:id
+PUT    /api/projects/:id
+DELETE /api/projects/:id
+POST   /api/projects/:id/members
+DELETE /api/projects/:id/members/:uid
+
+GET    /api/tasks
+POST   /api/tasks
+GET    /api/tasks/:id
+PUT    /api/tasks/:id
+DELETE /api/tasks/:id
+POST   /api/tasks/:id/comments
+POST   /api/tasks/:id/evaluate
+
+GET    /api/dashboard
+GET    /api/team
+PUT    /api/team/:id/role
+GET    /api/notifications
+PUT    /api/notifications/read-all
+GET    /api/health
+```
+
+---
+
+## ⚙️ Local Development
+
 ```bash
-# Install all dependencies
-npm run install:all
+git clone https://github.com/Devikapavithran/Team-Task-Manager.git
+cd Team-Task-Manager
 
-# Create backend .env
-cp .env.example backend/.env
-# Edit backend/.env with your local DB connection
+# Install & run backend
+cd backend && npm install
+# Create .env with DATABASE_URL=your_local_postgres_url
+node server.js
 
-# Start backend (port 5000)
-cd backend && npm start
-
-# In another terminal, start frontend (port 5173)
-cd frontend && npm run dev
+# Install & run frontend (new terminal)
+cd frontend && npm install && npm run dev
 ```
 
 Open http://localhost:5173
 
 ---
 
-## Project Structure
+## ☁️ Deployment
 
+Deployed on **Render.com**
+
+- Build command: `npm run build`
+- Start command: `npm start`
+- Database: Render PostgreSQL (auto-connected via DATABASE_URL)
+- Tables auto-created on first boot
+
+Environment variables required:
 ```
-taskflow-ai/
-├── frontend/               # React + Vite frontend
-│   ├── src/
-│   │   ├── pages/          # Route pages
-│   │   ├── components/     # Shared components
-│   │   ├── store/          # Zustand state
-│   │   └── api/            # API client
-│   ├── index.html
-│   └── vite.config.js
-├── backend/                # Express API
-│   ├── routes/             # API routes
-│   ├── middleware/         # Auth middleware
-│   ├── db/                 # DB connection & schema
-│   └── server.js
-├── railway.toml            # Railway deployment config
-└── package.json            # Root build scripts
+DATABASE_URL=<from Render PostgreSQL>
+JWT_SECRET=<random secret string>
+NODE_ENV=production
+CORS_ORIGIN=*
 ```
 
-## Live Demo
+---
 
-Deploy link: *Add your Railway URL after deployment*
+## 👩‍💻 Author
 
-## Video Demo
+**Devika S**
+GitHub: [@Devikapavithran](https://github.com/Devikapavithran)
 
-*Link to 2-5 minute demo video*
+---
+
+*Built for Ethara placement drive — Software Engineer role*
